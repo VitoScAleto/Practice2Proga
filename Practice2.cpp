@@ -135,15 +135,36 @@ pair<int, int> remainderModLog(int& number, int& degree, int& deductionModule){
 	return result;
 }
 
+int findDiviner(int&number, int& degree, int& deductionModule, int& remainder) {
+	int NUM = pow(number, degree);
+	for (int div = 2; div <= min( NUM, remainder); div++) {
+		if ( NUM % div == 0 && remainder % div == 0){
+			if (div % deductionModule != 0){
+				return div;
+			}
+		}
+	}
+	return 0;
+}
 
 void propertiesOfComparisons(int& number, int& degree, int& deductionModule, int& remainder) { //свойства сравнений
-	cout << "\nThe nearest numbers with the same remainder: ";
+	cout << "\nThe nearest numbers with the same remainder: ";                        //первое, ближайшие числа с тем же остатком
 	cout << " less: "<< remainder - deductionModule << "; more: " << remainder + deductionModule << endl;
 
-	cout << "\nInput the data for the second equality, ENTER THE SAME SIMPLE NUMBER:" << endl;
-	int degree2 = 0, number2 = 0, remainder2 = 0;
-	findRemainder(number2, degree2, deductionModule, remainder2);
+	int diviner = findDiviner(number, degree, deductionModule, remainder);   //есть существует делитель, то
+	if (diviner != 0) {
+		cout << number << " / " << diviner << " = " << remainder << " / " << diviner << " mod " << deductionModule << endl;
+	} else {
+		cout << "\nThe diviner was not found" << endl;
+	}
+	cout << "\nInput the data for the second equality, ENTER THE SAME SIMPLE NUMBER:" << endl; //найдем второе число и остаток
+	int degree2 = 0, number2 = 0, deductionModule2 = 0, remainder2 = 0;                                              //по тому же модулю
+	findRemainder(number2, degree2, deductionModule2, remainder2);
+	if (deductionModule2 != deductionModule) {
+		cout << "The input modules are not equal!" <<endl;
+	} else {
+		cout << "Accordingly: " << number << "**" << degree << " (*, +, -) " << number2 << "**" << degree2 << " = ";
+		cout << remainder << " (*, +, -) " << remainder2 << " mod " << deductionModule << endl;  //выведем второе свойство	
+	}
 
-	cout << "Accordingly: " << number << "**" << degree << " (*, +, -) " << number2 << "**" << degree2 << " = ";
-	cout << remainder << " (*, +, -) " << remainder2 << " mod " << deductionModule << endl;
 }
