@@ -1,31 +1,34 @@
 #include <iostream>
 using namespace std;
 
-tuple<int, int, int> evklid(int a, int b, int x, int y){
-    tuple<int, int, int> X = make_tuple(a, 1, 0);
-    tuple<int, int, int> Y = make_tuple(b, 0, 1);
-    cout << get<0>(X) << "\t" << get<1>(X) << "\t" << get<2>(X) << endl;
-    cout << get<0>(Y) << "\t" << get<1>(Y) << "\t" << get<2>(Y) << endl;
+tuple<int, int, int> evklid(int number1, int number2, int countOfN1, int countOfn2){
 
-    while (get<0>(Y) != 0) {
-        int Q = get<0>(X) / get<0>(Y);
-        tuple<int, int, int> T = make_tuple(get<0>(X) % get<0>(Y), get<1>(X) - Q * get<1>(Y), get<2>(X) - Q * get<2>(Y));
-        cout << get<0>(T) << "\t" << get<1>(T) << "\t" << get<2>(T) << "\t" << Q << endl;
-        X = Y;
-        Y = T;
+    tuple<int, int, int> forNumber1 = make_tuple(number1, 1, 0);  //инициализируем два картежа только с первым числом
+    tuple<int, int, int> forNumber2 = make_tuple(number2, 0, 1);  //и только со вторым числом
+
+    cout << get<0>(forNumber1) << "\t" << get<1>(forNumber1) << "\t" << get<2>(forNumber1) << endl; //выводим текущие картежи
+    cout << get<0>(forNumber2) << "\t" << get<1>(forNumber2) << "\t" << get<2>(forNumber2) << endl;
+
+    while (get<0>(forNumber2) != 0) {
+        int integerPart = get<0>(forNumber1) / get<0>(forNumber2); //целая часть от деления чисел в картеже
+
+        tuple<int, int, int> remains = make_tuple(get<0>(forNumber1) % get<0>(forNumber2), get<1>(forNumber1) - integerPart * get<1>(forNumber2), get<2>(forNumber1) - integerPart * get<2>(forNumber2));
+        cout << get<0>(remains) << "\t" << get<1>(remains) << "\t" << get<2>(remains) << "\t" << integerPart << endl;
+
+        forNumber1 = forNumber2;  //в первый картеж закидываем второй 
+        forNumber2 = remains;     //во второй закидываем с остатком
     }
-
-    return X;
+    return forNumber1;     //верни первый картеж, ибо во втором будет картеж с остатком 0
 }
 
 int main(){
-    int a = 28;
-    int b = 19;
-    int x = 0, y = 0;
-    tuple<int, int, int> result = evklid(a,b,x,y);
+    int number1 = 28;  //числа, которые перемножаются
+    int number2 = 19;  
+    int countOfN1 = 0, countOfN2 = 0; //количество первого числа и второго числа
+    tuple<int, int, int> result = evklid(number1, number2, countOfN1, countOfN2); //создаем картеж с остатком, количеством первого числа и второго числа
 
     cout << endl;
-    cout << " "<< a << " * (" << get<1> (result) << ") + " << b << " * ("<< get<2> (result) << ") = " << get<0> (result) << endl;
+    cout << " "<< number1 << " * (" << get<1> (result) << ") + " << number2 << " * ("<< get<2> (result) << ") = " << get<0> (result) << endl;
 
     return 0;
 }
