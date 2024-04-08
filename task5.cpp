@@ -1,9 +1,9 @@
 #include <iostream>
 using namespace std;
 
-void main() {
+int main() {
     int number, degree1, degree2;
-    
+
     cout << "Input number: ";
     cin >> number;
     cout << "Input degree: ";
@@ -21,5 +21,7 @@ void main() {
         numberInDegree2 = (numberInDegree2 * numberInDegree) % 10; // смотрим последнюю цифру
     }
 
-    cout << "Последняя цифра "<< numberInDegree2 << endl;
+    cout << "The last digit in the number is in the degree: "<< numberInDegree2 << endl;
+
+    return 0;
 }

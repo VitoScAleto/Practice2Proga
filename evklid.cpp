@@ -3,6 +3,8 @@ using namespace std;
 
 tuple<int, int, int> evklid(int number1, int number2, int countOfN1, int countOfn2){
 
+    cout << "remains" << "\t" << "countNumber1" << "\t" << "countNumber2" << "\t" << "diviner" << endl;
+
     tuple<int, int, int> forNumber1 = make_tuple(number1, 1, 0);  //инициализируем два картежа только с первым числом
     tuple<int, int, int> forNumber2 = make_tuple(number2, 0, 1);  //и только со вторым числом
 
