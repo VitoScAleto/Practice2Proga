@@ -10,6 +10,8 @@ void advanced_evclid(int number, int modulo, int& reverse, int& countOfModulo, i
     countOfModulo = 0;   //количество модуля - 0
     return;
   }
+  cout << "reverse" << "\t" << "diviner" << "\t" << "count of module" << endl;
+  cout << reverse << "\t" << diviner << "\t" << countOfModulo << endl;
 
   reverseNew = 1;
   reverseOld = 0;
@@ -30,6 +32,8 @@ void advanced_evclid(int number, int modulo, int& reverse, int& countOfModulo, i
     reverseOld = reverse;  // в предыдущее записываем новое
     countOfModuloNew = countOfModuloOld; //предыдущее становится текущим
     countOfModuloOld = countOfModulo;  //в предыдущее записываем новое
+    
+    cout << reverseNew << "\t" << number << "\t" << countOfModuloOld << endl;
   }
   diviner = number;  //в делитель записываем то, что осталось от модуля
   reverse = reverseNew; //в полученное значение записываем предыдущее, так как прошли через 0, а нам нужна 1 
@@ -37,7 +41,7 @@ void advanced_evclid(int number, int modulo, int& reverse, int& countOfModulo, i
 }
 
 int inverse(int number, int modulo){
-  int diviner, reverse, countOfModulo;
+  int diviner, reverse = 0, countOfModulo = 0;
   advanced_evclid(number, modulo, reverse, countOfModulo, diviner); //ищем обратное число через функцию
   
   if (diviner == 1) {     //если остаток от деления на модуль 1
