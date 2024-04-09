@@ -26,7 +26,7 @@ int main () {
 			propertiesOfComparisons(number, degree, deductionModule, remainder); //переходим к свойствам сравнений
 			break;
 		default:
-			cout << "Thank for using";
+			cout << "Thanks for using";
 			break;
 	}
 }
@@ -158,6 +158,7 @@ void propertiesOfComparisons(int& number, int& degree, int& deductionModule, int
 	} else {
 		cout << "\nThe diviner was not found" << endl;
 	}
+	
 	cout << "\nInput the data for the second equality, ENTER THE SAME SIMPLE NUMBER:" << endl; //найдем второе число и остаток
 	int degree2 = 0, number2 = 0, deductionModule2 = 0, remainder2 = 0;                                              //по тому же модулю
 	findRemainder(number2, degree2, deductionModule2, remainder2);
@@ -167,5 +168,4 @@ void propertiesOfComparisons(int& number, int& degree, int& deductionModule, int
 		cout << "Accordingly: " << number << "**" << degree << " (*, +, -) " << number2 << "**" << degree2 << " = ";
 		cout << remainder << " (*, +, -) " << remainder2 << " mod " << deductionModule << endl;  //выведем второе свойство	
 	}
-
 }
