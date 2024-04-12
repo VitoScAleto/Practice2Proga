@@ -15,6 +15,7 @@ void propertiesOfComparisons(int& number, int& degree, int& deductionModule, int
 int Eiler(int& number, int& degree, int& deductionModule);
 int countCoprimes(int& deductionModule);
 
+
 int main() {
 	int degree = 0, deductionModule = 0, number = 0, remainder = 0;
 	findRemainder(number, degree, deductionModule, remainder);  //ищем остаток по модулю
@@ -25,6 +26,8 @@ int main() {
 	cout << "Enter number: ";
 	char s;
 	cin >> s;
+	cout << "\n";
+	int remainderEiler=0;
 	cout << "\n";
 	int remainderEiler=0;
 
@@ -83,8 +86,7 @@ void Input(int& number, int& degree, int& deductionModule) { // вывод
 int FermsTheorema(int number, int deductionModule) { // теорема ферма
 	if (number % deductionModule == 0) { //если число делится на простое число без остатка
 		return 0;                        //идем по другой ветке
-	}
-	else {
+	} else {
 		return 1;
 	}
 }
@@ -118,6 +120,7 @@ int degree1(int number, int degree, int simple) {
 	}
 	return result;
 }
+
 
 pair<int, int> remainderModLog(int& number, int& degree, int& deductionModule) {
 	pair<int, int> result = { 1,1 };
@@ -164,24 +167,28 @@ void propertiesOfComparisons(int& number, int& degree, int& deductionModule, int
 	int diviner = findDiviner(number, degree, deductionModule);   //есть существует делитель, то
 	if (diviner != 0) {
 		cout << number << " / " << diviner << " = " << remainder << " / " << diviner << " mod " << deductionModule << endl;
-	}
-	else {
+	} else {
 		cout << "\nThe diviner was not found" << endl;
 	}
-
 	cout << "\nInput the data for the second equality, ENTER THE SAME SIMPLE NUMBER:" << endl; //найдем второе число и остаток
 	int degree2 = 0, number2 = 0, deductionModule2 = 0, remainder2 = 0;                        //по тому же модулю
 	findRemainder(number2, degree2, deductionModule2, remainder2);
 	if (deductionModule2 != deductionModule) {
 		cout << "The input modules are not equal!" << endl;
-	}
-	else {
+	} else {
 		cout << "Accordingly: " << number << "**" << degree << " (*, +, -) " << number2 << "**" << degree2 << " = ";
 		cout << remainder << " (*, +, -) " << remainder2 << " mod " << deductionModule << endl;  //выведем второе свойство	
 	}
 }
 
 int Eiler(int& number, int& degree, int& deductionModule) {
+	int result = 1;
+	if (findDiviner(number, degree, deductionModule) == 0) {
+		degree = degree % countCoprimes(deductionModule);
+		for (int i = 1; i <= degree; i++) {   //идем по каждой степени и оставляем только остатки
+			result *= number;
+			result %= deductionModule;
+		}
 	int result = 1;
 	if (findDiviner(number, degree, deductionModule) == 0) {
 		degree = degree % countCoprimes(deductionModule);
