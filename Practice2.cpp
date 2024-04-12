@@ -201,6 +201,7 @@ int Eiler(int& number, int& degree, int& deductionModule) {
 		return -1;
 	}
 	return result;
+	}
 }
 
 int NOD(int a, int b) {  //находит наибольший общий делитель
