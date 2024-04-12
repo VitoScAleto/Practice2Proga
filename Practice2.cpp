@@ -11,19 +11,32 @@ int FermsTheorema (int a, int p);                               // малая т
 void PrintThFerma (int& number, int& degree, int& deductionModule); // вывод теоремы ферма когда а кратно р
 pair<int, int> remainderModLog (int& number, int& degree, int& primeNumber); //функция для вычисления остатка
 void propertiesOfComparisons(int& number, int& degree, int& deductionModule, int& remainder); //просмотр свойств сравнений
+int Eiler(int& number, int& degree, int& deductionModule);
 
 int main () {
 	int degree = 0, deductionModule = 0, number = 0, remainder = 0;
 	findRemainder(number, degree, deductionModule, remainder);  //ищем остаток по модулю
 
 	cout << "\nIf you want watch properities of comparisons input '1'\n"; //если хотим посмотреть свойства сравнений
+	cout << "Watch theorem Eiler of comparisons input '2'\n";
 	cout << "For exit select any other key\n"; //для выхода любой кроме
 	cout << "Enter number: ";
 	char s;
 	cin >> s;
+	cout << "\n" ;
+	int remainderEiler;
+
 	switch (s) {
 		case('1'):
 			propertiesOfComparisons(number, degree, deductionModule, remainder); //переходим к свойствам сравнений
+			break;
+		case('2'):
+			remainderEiler = Eiler(number, degree, deductionModule);
+			if (remainderEiler != -1) {
+				cout << "\n" << "By Eiler Theorem remainder = " << remainderEiler;
+			} else {
+				cout << "Error input!";
+			}
 			break;
 		default:
 			cout << "Thanks for using";
@@ -118,15 +131,15 @@ pair<int, int> remainderModLog(int& number, int& degree, int& deductionModule){
 	vector<int> binary = toBinary(degree);  //переводим степень в 2сс.
 	vector<int> numForResult;              //заводим вектор остатков
 	for (int i = 0, forVector = 0, forVectorOst = 0; i < logByNumber; i++){
-		forVector = pow(number, pow(2,i));          //возводим число в степень 
+		forVector = pow(number, pow(2,i)) + 1;          //возводим число в степень 
 		forVectorOst = forVector % deductionModule;  //берем остаток по модулю
 		numForResult.push_back(forVectorOst);       //записываем в вектор остатков
 	}
 
 	int resultForPrime = 1;
-	for (int i = 0; i < binary.size(); i++){
+	for (int i = 1; i < binary.size()+1; i++){
 		if ( binary[i] == 1 ){              //если в векторе двоичного представления степени стоит 1
-			resultForPrime = resultForPrime * numForResult[i]; //значит берем в перемножение
+			resultForPrime = resultForPrime * numForResult[i-1]; //значит берем в перемножение
 		}
 	}
 	result.second = resultForPrime % deductionModule;  //после смотрим на остаток
@@ -134,12 +147,12 @@ pair<int, int> remainderModLog(int& number, int& degree, int& deductionModule){
 	return result;  //вернем пару значений
 }
 
-int findDiviner(int&number, int& degree, int& deductionModule, int& remainder) {
+int findDiviner(int&number, int& degree, int& deductionModule) {
 
 	int NUM = pow(number, degree);
 
-	for (int div = 2; div <= min( NUM, remainder ); div++) { //проходимся по делителям
-		if ( NUM % div == 0 && remainder % div == 0){  //если он делит оба числа
+	for (int div = 2; div <= min( NUM, deductionModule ); div++) { //проходимся по делителям
+		if ( NUM % div == 0 && deductionModule % div == 0){  //если он делит оба числа
 			if (div % deductionModule != 0){           //и не делится на модуль
 				return div;                           //это он
 			}
@@ -152,7 +165,7 @@ void propertiesOfComparisons(int& number, int& degree, int& deductionModule, int
 	cout << "\nThe nearest numbers with the same remainder: ";                        //первое, ближайшие числа с тем же остатком
 	cout << " less: "<< remainder - deductionModule << "; more: " << remainder + deductionModule << endl;
 
-	int diviner = findDiviner(number, degree, deductionModule, remainder);   //есть существует делитель, то
+	int diviner = findDiviner(number, degree, deductionModule);   //есть существует делитель, то
 	if (diviner != 0) {
 		cout << number << " / " << diviner << " = " << remainder << " / " << diviner << " mod " << deductionModule << endl;
 	} else {
@@ -160,12 +173,26 @@ void propertiesOfComparisons(int& number, int& degree, int& deductionModule, int
 	}
 	
 	cout << "\nInput the data for the second equality, ENTER THE SAME SIMPLE NUMBER:" << endl; //найдем второе число и остаток
-	int degree2 = 0, number2 = 0, deductionModule2 = 0, remainder2 = 0;                                              //по тому же модулю
+	int degree2 = 0, number2 = 0, deductionModule2 = 0, remainder2 = 0;                        //по тому же модулю
 	findRemainder(number2, degree2, deductionModule2, remainder2);
 	if (deductionModule2 != deductionModule) {
 		cout << "The input modules are not equal!" <<endl;
 	} else {
 		cout << "Accordingly: " << number << "**" << degree << " (*, +, -) " << number2 << "**" << degree2 << " = ";
 		cout << remainder << " (*, +, -) " << remainder2 << " mod " << deductionModule << endl;  //выведем второе свойство	
+	}
+}
+
+int Eiler(int& number, int& degree, int& deductionModule) {
+
+	if(findDiviner(number, degree, deductionModule) !=0) {
+		degree = degree % deductionModule;
+	}
+	if( number % deductionModule ==0 or deductionModule % number== 0) {
+		return -1;
+	} else{
+		int remainder = 0;
+		findRemainder(number, degree, deductionModule, remainder);
+		return remainder;
 	}
 }
