@@ -1,4 +1,4 @@
- #include <iostream>
+#include <iostream>
 #include <vector>
 #include <algorithm>
 #include <math.h>
@@ -26,8 +26,6 @@ int main() {
 	cout << "Enter number: ";
 	char s;
 	cin >> s;
-	cout << "\n";
-	int remainderEiler=0;
 	cout << "\n";
 	int remainderEiler=0;
 
@@ -121,7 +119,6 @@ int degree1(int number, int degree, int simple) {
 	return result;
 }
 
-
 pair<int, int> remainderModLog(int& number, int& degree, int& deductionModule) {
 	pair<int, int> result = { 1,1 };
 
@@ -129,9 +126,10 @@ pair<int, int> remainderModLog(int& number, int& degree, int& deductionModule) {
 
 	int logByNumber = log2(degree);     //рассматриваем остатки через логаривм и 2сс.
 	vector<int> binary;  //переводим степень в 2сс.
-	while (degree > 0) {
-		binary.push_back(degree % 2);
-		degree /= 2;
+	int degree2 = degree;
+	while (degree2 > 0) {
+		binary.push_back(degree2 % 2);
+		degree2 /= 2;
 	}
 
 	int resultForPrime = 1;
@@ -142,7 +140,7 @@ pair<int, int> remainderModLog(int& number, int& degree, int& deductionModule) {
 		}
 	}
 	result.second = resultForPrime % deductionModule;  //после смотрим на остаток
-
+	
 	return result;  //вернем пару значений
 }
 
@@ -189,19 +187,11 @@ int Eiler(int& number, int& degree, int& deductionModule) {
 			result *= number;
 			result %= deductionModule;
 		}
-	int result = 1;
-	if (findDiviner(number, degree, deductionModule) == 0) {
-		degree = degree % countCoprimes(deductionModule);
-		for (int i = 1; i <= degree; i++) {   //идем по каждой степени и оставляем только остатки
-			result *= number;
-			result %= deductionModule;
-		}
 	}
 	if (number % deductionModule == 0 or deductionModule % number == 0) {
 		return -1;
 	}
 	return result;
-	}
 }
 
 int NOD(int a, int b) {  //находит наибольший общий делитель
