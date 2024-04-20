@@ -1,58 +1,120 @@
 #include <iostream>
-#include <math.h>
 #include <vector>
-#include <string>
+#include <algorithm>
+#include <math.h>
+#include <cstring>
+#include <locale.h>
 using namespace std;
 
-void Printf(int& number, int& degree, int& deductionModule);       // scan and print
+int findRemainder(int& number, int& degree, int& deductionModule, int& remainder); //поиска остатка
+void Input(int& number, int& degree, int& deductionModule);    // вывод
 bool isValidPrimeNumber(int validPrimeNumber);                 // проверка на простое число
 int FermsTheorema(int a, int p);                               // малая теорема ферма
-void PrintThFerma(int& number, int& degree, int& deductionModule); // вывод теоремы ферма
-pair<int, int> remainderModLog(int& number, int& degree, int& deductionModule);// algorithm log2
-string toBinary(int number);// translate from dec to bin
-void functionSwitchCase(int& number, int& degree, int& deductionModule);
+void PrintThFerma(int& number, int& degree, int& deductionModule); // вывод теоремы ферма когда а кратно р
+pair<int, int> remainderModLog(int& number, int& degree, int& primeNumber); //функция для вычисления остатка
+void propertiesOfComparisons(int& number, int& degree, int& deductionModule, int& remainder); //просмотр свойств сравнений
+int Eiler(int& number, int& degree, int& deductionModule);
+int countCoprimes(int& deductionModule);
 
-int main()
+
+int main() 
 {
-	int degree = 0, deductionModule = 0, number = 0, number2 = 0;;
-	functionSwitchCase(number,degree,deductionModule);
-	if (degree == deductionModule && isValidPrimeNumber(deductionModule) == true)// проверка использования теоремы ферма
+	setlocale(LC_ALL, "Rus");
+	int degree = 0, deductionModule = 0, number = 0, remainder = 0;
+	findRemainder(number, degree, deductionModule, remainder);  //ищем остаток по модулю
+	cout << "\nСвойства сравнений '1'\n"; //если хотим посмотреть свойства сравнений
+	cout << "Теорема Эйлера '2'\n";
+	cout << "Для выхода нажмите любую кнопку\n"; //для выхода любой кроме
+	cout << "Введите число: ";
+	char s;
+	cin >> s;
+	cout << "\n";
+	int remainderEiler = 0;
+
+	switch (s) 
 	{
-		PrintThFerma(number, degree, deductionModule);
+	case('1'):
+		propertiesOfComparisons(number, degree, deductionModule, remainder); //переходим к свойствам сравнений
+		break;
+	case('2'):
+		remainderEiler = Eiler(number, degree, deductionModule);
+		if (remainderEiler != -1) 
+		{
+			cout << "\n" << "By Eiler Theorem remainder = " << remainderEiler;
+		}
+		else 
+		{
+			cout << "Error input!";
+		}
+		break;
+	default:
+		cout << "Thanks for using\n";
+		break;
 	}
-	pair<int, int> result = remainderModLog(number, degree, deductionModule);
-	cout << "\nResult by model = " << result.first << "\nResult By logarifm = " << result.second << endl;
+}
+
+int findRemainder(int& number, int& degree, int& deductionModule, int& remainder) 
+{
+	Input(number, degree, deductionModule);    //сначала вводим с клавиатуры данные
+
+	if (degree == deductionModule && isValidPrimeNumber(deductionModule) == true) // используем теорему ферма
+	{ 
+		PrintThFerma(number, degree, deductionModule);    //если степень равна модулю и проверка на простое
+	}
+
+	pair<int, int> result = remainderModLog(number, degree, deductionModule);  //рассматриваем остатки через функцию
+	cout << "Result by model = " << result.first << " and by logarifm = " << result.second << endl;
+	remainder = result.first;  //выводим остатки, полученные двумя способами
 
 	return 0;
 }
 
-void Printf(int& number, int& degree, int& deductionModule)// scan and print
+void Input(int& number,  int& degree, int& deductionModule) // ввод
 { 
-	cout << "Input the number: \nnumber = ";
-	cin >> number;
-	do {
-		cout << "Input the degree: \ndegree = ";
+	
+	while (true)
+	{
+		cout << "Введите целое число: \nnumber = "; //введите число
+		cin >> number;
+		if (cin.fail())
+		{
+			cin.clear();
+			cin.ignore(5,'\n');
+			cout << "Это не целое число. Повторите ввод\n" << endl;
+		}
+		else break;
+	}
+	while (true)
+	{
+		cout << "Введите степень(целое неотрицательное число): \ndegree = ";  //введите число в степени
 		cin >> degree;
-		if (degree < 0)
+		if (cin.fail() || degree < 0)
 		{
-			cout << "\nDegree cannot be subzero!!!\n\n";
+			cin.clear();
+			cin.ignore(5, '\n');
+			cout << "Ошибка. Повторите ввод\n" << endl;
 		}
-	} while (degree < 0);
-	do {
-		cout << "Input deduction module: \ndeductionModule = ";
+		else break;
+	}
+	while (true)
+	{
+		cout << "Введите модуль, по которому сравниваются числа(модуль простое число не равное 0,1) \nprimeNumber = ";  //введите простое число
 		cin >> deductionModule;
-		if (deductionModule < 0)
+		if (cin.fail() || deductionModule < 0 || isValidPrimeNumber(deductionModule)==false)// cin.fail - проверка пользовательского ввода
 		{
-			cout << "\nDeduction module cannot be subzero!!!\n\n";
+			cin.clear();// очистка cin
+			cin.ignore(5, '\n');// и удаляем значения предыдущего ввода из входного буфера
+			cout << "Ошибка. Повторите ввод\n" << endl;
 		}
-	} while (deductionModule < 0);
+		else break;
+	}
 }
 
-int FermsTheorema(int a, int p)// теорема ферма
+int FermsTheorema(int number, int deductionModule) // теорема ферма
 { 
-	if (a % p == 0)
-	{
-		return 0;
+	if (number % deductionModule == 0) //если число делится на простое число без остатка
+	{ 
+		return 0;                        //идем по другой ветке
 	}
 	else 
 	{
@@ -60,21 +122,26 @@ int FermsTheorema(int a, int p)// теорема ферма
 	}
 }
 
-bool isValidPrimeNumber(int validPrimeNumber)// проверка на простое число
-{
-	if (validPrimeNumber == 0 || validPrimeNumber == 1) return false;
-	for (int i = 2; i < sqrt(validPrimeNumber) + 1; i++)
-	{
-		if (validPrimeNumber % i == 0) return false;
-
+bool isValidPrimeNumber(int validPrimeNumber)  // проверка на простое число
+{     
+	if (validPrimeNumber == 0 || validPrimeNumber == 1) //если модуль 0 или 1
+	{  
+		return false;
+	}
+	for (int i = 2; i < sqrt(validPrimeNumber) + 1; i++) //если нашли число, которое делит модуль, то верни ошибку
+	{  
+		if (validPrimeNumber % i == 0) 
+		{
+			return false;
+		}
 	}
 	return true;
 }
 
-void PrintThFerma(int& number, int& degree, int& deductionModule)// вывод теоремы ферма
-{ 
-	cout << "\nBy Ferm's theorem:\n" << endl;
-	if (FermsTheorema(number, deductionModule) == 0)// когда целое кратно простому
+void PrintThFerma(int& number, int& degree, int& deductionModule)  // вывод теоремы ферма когда а кратно р
+{
+	cout << "\nПо теореме Ферма:\n" << endl;
+	if (FermsTheorema(number, deductionModule) == 0) // когда целое кратно простому модулю
 	{          
 		cout << number << "^" << degree << " mod " << deductionModule << " = 0" << endl;
 	}
@@ -84,71 +151,131 @@ void PrintThFerma(int& number, int& degree, int& deductionModule)// вывод �
 	}
 }
 
-pair<int, int> remainderModLog(int& number, int& degree, int& deductionModule)
+int degree1(int number, int degree, int simple) 
 {
-	pair<int, int> result = { 1,1 };
-
-	for (int i = 1; i <= degree; i++)
+	int result = 1;
+	for (int i = 1; i <= degree; i++) 
 	{
-		result.first *= number;
-		result.first %= deductionModule;
+		result = (result * number) % simple;
 	}
-	int logByNumber = log2(number);
-	string binary = toBinary(number);
-	vector<int> numForResult;
-	for (int i = 0; i <= logByNumber; i++)
-	{
-		numForResult.push_back(pow(number, pow(2, i)));
-	}
-	int resultForPrime = 0;
-	for (int i = 0; i < binary.length(); i++)
-	{
-		if (binary[i] == '1') {
-			resultForPrime *= numForResult[i];
-		}
-	}
-	result.second = resultForPrime % deductionModule;
-
 	return result;
 }
 
-string toBinary(int number) // translate from dec to bin
+pair<int, int> remainderModLog(int& number, int& degree, int& deductionModule) 
 {
-	if (number == 0) {
-		return "0";
-	}
-	string binary = "";
-	while (number > 0) {
-		binary = to_string(number % 2) + binary;
-		number /= 2;
+	pair<int, int> result = { 1,1 };
+
+	result.first = degree1(number, degree, deductionModule);
+
+	int logByNumber = log2(degree);     //рассматриваем остатки через логаривм и 2сс.
+	vector<int> binary;  //переводим степень в 2сс.
+	int degree2 = degree;
+	while (degree2 > 0) 
+	{
+		binary.push_back(degree2 % 2);
+		degree2 /= 2;
 	}
 
-	return binary;
+	int resultForPrime = 1;
+	for (int i = 0; i <= logByNumber; i++) 
+	{
+		if (binary[i] == 1)  //бинарное не переворачиваем, а просто идем с "конца"
+		{ 
+			int oneDegree = pow(2, i);
+			resultForPrime *= degree1(number, oneDegree, deductionModule); //вместо второго этапа воспользуемся уже имеющейся функцией и будем вычислять при необходимости
+		}
+	}
+	result.second = resultForPrime % deductionModule;  //после смотрим на остаток
+
+	return result;  //вернем пару значений
 }
 
-void propertiesOfComparisons(int& number, int& degree, int& deductionModule, int& number2)//свойства сравнений
+int findDiviner(int& number, int& degree, int& deductionModule) 
 {
-	cout << "Enter number "
-	Printf(number, degree, deductionModule);
 
+	int NUM = pow(number, degree);
+
+	for (int div = 2; div <= min(NUM, deductionModule); div++) //проходимся по делителям
+	{ 
+		if (NUM % div == 0 && deductionModule % div == 0) // если он делит оба числа
+		{  
+			if (div % deductionModule != 0) //и не делится на модуль
+			{           
+				return div;                           //это он
+			}
+		}
+	}
+	return 0;
 }
-void functionSwitchCase(int& number, int& degree, int& deductionModule)
-{
-	cout << "To select module comprasion properties press 1\n";
-	cout << "To selecte everything else press 2\n";
-	cout << "Enter number: ";
-	char s;
-	cin >> s;
-	switch (s) {
 
-	case('1'):
-		propertiesOfComparisons();
-		break;
-	case ('2'):
-		Printf(number, degree, deductionModule);
-		break;
-	default:
-		cout << "Error";
-		break;
+void propertiesOfComparisons(int& number, int& degree, int& deductionModule, int& remainder) //свойства сравнений
+{ 
+	cout << "\nThe nearest numbers with the same remainder: ";                        //первое, ближайшие числа с тем же остатком
+	cout << " less: " << remainder - deductionModule << "; more: " << remainder + deductionModule << endl;
+
+	int diviner = findDiviner(number, degree, deductionModule);   //есть существует делитель, то
+	if (diviner != 0) 
+	{
+		cout << number << " / " << diviner << " = " << remainder << " / " << diviner << " mod " << deductionModule << endl;
+	}
+	else 
+	{
+		cout << "\nThe diviner was not found" << endl;
+	}
+	cout << "\nInput the data for the second equality, ENTER THE SAME SIMPLE NUMBER:" << endl; //найдем второе число и остаток
+	int degree2 = 0, number2 = 0, deductionModule2 = 0, remainder2 = 0;                        //по тому же модулю
+	findRemainder(number2, degree2, deductionModule2, remainder2);
+	if (deductionModule2 != deductionModule) 
+	{
+		cout << "The input modules are not equal!" << endl;
+	}
+	else 
+	{
+		cout << "Accordingly: " << number << "**" << degree << " (*, +, -) " << number2 << "**" << degree2 << " = ";
+		cout << remainder << " (*, +, -) " << remainder2 << " mod " << deductionModule << endl;  //выведем второе свойство	
 	}
 }
+
+int Eiler(int& number, int& degree, int& deductionModule) 
+{
+	int result = 1;
+	if (findDiviner(number, degree, deductionModule) == 0) 
+	{
+		degree = degree % countCoprimes(deductionModule);
+		for (int i = 1; i <= degree; i++) //идем по каждой степени и оставляем только остатки
+		{   
+			result *= number;
+			result %= deductionModule;
+		}
+	}
+	if (number % deductionModule == 0 || deductionModule % number == 0) 
+	{
+		return -1;
+	}
+	return result;
+}
+
+int NOD(int a, int b) //находит наибольший общий делитель
+{  
+	while (b != 0) 
+	{  
+		int t = b;
+		b = a % b;
+		a = t;
+	}
+	return a;
+}
+
+int countCoprimes(int& deductionModule) // проверка чисел на взаимную простоту
+{
+	int count = 0;
+	for (int i = 1; i < deductionModule; i++) //проходит от 1 до числа
+	{  
+		if (NOD(deductionModule, i) == 1) //если наибольший общий делитель 1 
+		{     
+			count++;
+		}
+	}
+	return count;
+}
+
