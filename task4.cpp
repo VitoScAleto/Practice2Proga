@@ -91,7 +91,8 @@ int generationKey(int number, int privetKey, int deductionModule)
 }
 
 // Функция для шифрования текста с использованием простого XOR-шифра
-string encrypt_text(string& plaintext,  string& key) {
+string encrypt_text(string& plaintext,  string& key) // XOR - побитовое исключающее или
+{
     string encryptedText = plaintext;
     size_t keyLength = key.length();
     size_t textLength = plaintext.length();
@@ -104,7 +105,8 @@ string encrypt_text(string& plaintext,  string& key) {
 }
 
 // Функция для дешифрования текста с использованием простого XOR-шифра
-string decrypt_text( string& ciphertext,  string& key) {
+string decrypt_text( string& ciphertext,  string& key) 
+{
     return encrypt_text(ciphertext, key);  // Так как операция XOR обратима, дешифрование и шифрование идентичны
 }
 

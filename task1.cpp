@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
-#include <math.h>
+#include <cmath>
 #include <cstring>
 #include <locale.h>
 using namespace std;
@@ -14,6 +13,7 @@ int Eiler(int& number, int& degree, int& deductionModule);//+
 int countCoprimes(int& deductionModule);// взаимно простые числа для модуля. Для теоремы Эйлера+
 int resultMod(int number, int degree, int deductionModule);//+
 int NOD(int a, int b);//+
+int property(int& number, int& degree, int& deductionModule);// a(+,-,*)b mod m = a mod m (+,-,*) b mod m
 
 int main()
 {
@@ -22,12 +22,13 @@ int main()
 	cout << "Теорема Эйлера '1'\n";
 	cout << "Логарифм '2'\n";
 	cout << "Малая теорема Ферма '3' " << endl;
+	cout << "a(+,-,*)b mod m = a mod m (+,-,*) b mod m '4'" << endl;
 	cout << "Для выхода нажмите любую кнопку\n"; //для выхода любой кроме
 	cout << "Введите число: ";
 	char s;
 	cin >> s;
 	cout << "\n";
-	
+
 	while (true)
 	{
 		switch (s)
@@ -44,14 +45,63 @@ int main()
 		case('3'):
 			FermsTheorema(number, degree, deductionModule);
 			break;
+		case('4'):
+			property(number,  degree, deductionModule);
+			break;
 		default:
 			cout << "Thanks for using\n";
 			break;
 		}
 	}
+	return 0;
 }
 
+int property(int& number, int& degree, int& deductionModule)
+{
+	int result1 = 0, result2 = 0, deductionModule1 = 0, deductionModule2 = 0;
+	do
+	{
+		cout << "Введите 1 пример" << endl;
 
+		Input(number, degree, deductionModule1);
+		result1 = resultMod(number, degree, deductionModule1);
+
+		cout << "\nВведите 2 пример" << endl;
+
+		Input(number, degree, deductionModule2);
+		result2 = resultMod(number, degree, deductionModule2);
+		if (deductionModule1 != deductionModule2)
+		{
+			cout << "\nМодули должны быть равны. Повторите ввод\n" << endl;
+		}
+	} while (deductionModule1 != deductionModule2);
+	cout << "\n";
+	cout << "Выберите операцию" << endl;
+	cout << "+ '1' " << endl;
+	cout << "- '2' " << endl;
+	cout << "* '3' " << endl;
+	char choice;
+	cin >> choice;
+	while (true)
+	{
+		switch (choice)
+		{
+		case('1'):
+			cout << result1 + result2<<endl;
+			return 0;
+		case('2'):
+			cout << result1 - result2<<endl;
+			return 0;
+		case('3'):
+			cout << result1 * result2<<endl;
+			return 0;
+		default:
+			break;
+		}
+	}
+
+	return 0;
+}
 void Input(int& number, int& degree, int& deductionModule) // ввод
 {
 	while (true)
@@ -92,7 +142,7 @@ void Input(int& number, int& degree, int& deductionModule) // ввод
 	}
 }
 
-void FermsTheorema(int& number,int& degree, int& deductionModule) // теорема ферма
+void FermsTheorema(int& number, int& degree, int& deductionModule) // теорема ферма
 {
 	Input(number, degree, deductionModule);
 	if (isValidPrimeNumber(deductionModule) == true && deductionModule == degree)
@@ -139,7 +189,7 @@ int resultMod(int number, int degree, int deductionModule)
 	return result;
 }
 
-int remainderLog(int& number, int& degree, int& deductionModule) 
+int remainderLog(int& number, int& degree, int& deductionModule)
 {
 	Input(number, degree, deductionModule);
 	int result = 0;
@@ -178,7 +228,7 @@ int Eiler(int& number, int& degree, int& deductionModule)
 	else
 	{
 		cout << "Теорема Эйлера для этих чисел не выполнима. Повторите попытку" << endl;
-		
+
 	}
 	return 0;
 }
