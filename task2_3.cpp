@@ -10,18 +10,18 @@ int extendedEuclideanAlgorithm(int number, int module, int& x, int& y)
         y = 0;
         return number;
     }
-    int x1, y1;
-    int gcd = extendedEuclideanAlgorithm(module, number % module, x1, y1);
+    int x1 = 0, y1 = 0;
+    int NOD = extendedEuclideanAlgorithm(module, number % module, x1, y1); // в реккуретной форме переставляем число и модуль местами
     x = y1;
     y = x1 - (number / module) * y1;
-    return gcd;
+    return NOD;
 }
 
 int findInverseElement(int number, int module)
 {
     int x = 0, y = 0;
-    int gcd = extendedEuclideanAlgorithm(number, module, x, y);
-    if (gcd != 1) {
+    int NOD = extendedEuclideanAlgorithm(number, module, x, y);
+    if (NOD != 1) {
         cout << "Обратного элемента не существует";
         return 0;
     }
@@ -39,7 +39,7 @@ int main() {
     cout << "Введите модуль" << endl;
     cin >> module;
     int inverse_number = findInverseElement(number, module);
-    cout << number << "^-1" <<" mod " << module << " = " << inverse_number << endl;
+    cout << number << "^-1" << " mod " << module << " = " << inverse_number << endl;
     cout << number << " * " << inverse_number << " по модулю " << module << " = 1" << endl;
     return 0;
 }
