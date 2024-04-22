@@ -18,7 +18,7 @@ int property(int& number, int& degree, int& deductionModule);// a(+,-,*)b mod m 
 int main()
 {
 	setlocale(LC_ALL, "Rus");
-	int degree = 0, deductionModule = 0, number = 0, remainder = 0;
+	int degree = 0, deductionModule = 0, number = 0;
 	cout << "Теорема Эйлера '1'\n";
 	cout << "Логарифм '2'\n";
 	cout << "Малая теорема Ферма '3' " << endl;
